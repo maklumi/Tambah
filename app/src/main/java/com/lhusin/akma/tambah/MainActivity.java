@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     ImageButton imageButtonBetul, imageButtonSalah;
     FloatingActionButton fab;
+    String heart="";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +69,9 @@ public class MainActivity extends AppCompatActivity {
         imageButtonSalah = (ImageButton)findViewById(R.id.imageButtonSalah);
         textViewBetul = (TextView)findViewById(R.id.textViewBetul);
         textViewSalah = (TextView)findViewById(R.id.textViewSalah);
+        heart = new String(new int[] {0x2764}, 0,1);
 
+        Log.i("heart", heart);
     }
 
     public void mulakanMain(View v) {
@@ -75,10 +79,8 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setProgress(0);
         textViewSalah.setText("0");
         textViewBetul.setText("0");
-        buttonTag1.setEnabled(true);
-        buttonTag2.setEnabled(true);
-        buttonTag3.setEnabled(true);
-        buttonTag4.setEnabled(true);
+        stateButton(true);
+        textViewSalah.setText(new String(new char[5]).replace("\0", heart));
         skor = 0;
         bilanganSoalan =0;
 
@@ -95,12 +97,16 @@ public class MainActivity extends AppCompatActivity {
 
                 fab.setVisibility(View.VISIBLE);
                 progressBar.setProgress(progressBar.getMax());
-                buttonTag1.setEnabled(false);
-                buttonTag2.setEnabled(false);
-                buttonTag3.setEnabled(false);
-                buttonTag4.setEnabled(false);
+                stateButton(false);
             }
         }.start();
+    }
+
+    private void stateButton(boolean enabled) {
+        buttonTag1.setEnabled(enabled);
+        buttonTag2.setEnabled(enabled);
+        buttonTag3.setEnabled(enabled);
+        buttonTag4.setEnabled(enabled);
     }
 
     private void rekaSoalan() {
@@ -147,14 +153,21 @@ public class MainActivity extends AppCompatActivity {
 
            // Toast.makeText(getApplicationContext(), "Betul", Toast.LENGTH_SHORT).show();
             textViewBetul.setText(Integer.toString(skor));
-            imageButtonBetul.animate().rotation(360f);
-            imageButtonBetul.getDrawable();
+
 
         } else {
 
           //  Toast.makeText(getApplicationContext(),"tak", Toast.LENGTH_SHORT).show();
-            textViewSalah.setText(Integer.toString(bilanganSoalan-skor));
-            imageButtonSalah.animate().rotation(360f);
+           // textViewSalah.setText(Integer.toString(bilanganSoalan - skor));
+            if ((bilanganSoalan - skor ) < 6 ) {
+                textViewSalah.setText(new String(new char[5-(bilanganSoalan-skor)]).replace("\0", heart));
+            } else {
+                //habis heart
+                stateButton(false);
+                Log.i("salah", "" + (bilanganSoalan - skor));
+                textViewSalah.setText("Habis!");
+            }
+
         }
         bilanganSoalan++;
         rekaSoalan();
@@ -181,5 +194,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.getItem(0).setEnabled(false);
+        return super.onPrepareOptionsMenu(menu);
     }
 }
