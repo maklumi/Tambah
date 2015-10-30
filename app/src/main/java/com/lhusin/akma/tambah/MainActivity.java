@@ -1,5 +1,7 @@
 package com.lhusin.akma.tambah;
 
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,14 +25,18 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     TextView textViewSoalan;
+    TextView textViewBetul;
+    TextView textViewSalah;
     Button buttonTag1, buttonTag2, buttonTag3, buttonTag4;
     GridLayout gridLayoutPilihanJawapan;
     ArrayList<Integer> pilihanJawapan = new ArrayList<Integer>();
     int tagBetul;
     int skor = 0;
-    private int bilanganSoalan;
+    int bilanganSoalan;
+    int bilanganSalah = 0;
     private ProgressBar progressBar;
-
+    ImageButton imageButtonBetul, imageButtonSalah;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +45,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).dismiss();
+                Snackbar.make(view, "Mula!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                mulakanMain(fab);
             }
         });
 
@@ -55,9 +63,44 @@ public class MainActivity extends AppCompatActivity {
         buttonTag4 = (Button)findViewById(R.id.buttonTag4);
         gridLayoutPilihanJawapan = (GridLayout)findViewById(R.id.gridLayoutPilihanJawapan);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        imageButtonBetul = (ImageButton)findViewById(R.id.imageButtonBetul);
+        imageButtonSalah = (ImageButton)findViewById(R.id.imageButtonSalah);
+        textViewBetul = (TextView)findViewById(R.id.textViewBetul);
+        textViewSalah = (TextView)findViewById(R.id.textViewSalah);
+
+    }
+
+    public void mulakanMain(View v) {
+        fab.setVisibility(View.INVISIBLE);
+        progressBar.setProgress(0);
+        textViewSalah.setText("0");
+        textViewBetul.setText("0");
+        buttonTag1.setEnabled(true);
+        buttonTag2.setEnabled(true);
+        buttonTag3.setEnabled(true);
+        buttonTag4.setEnabled(true);
+        skor = 0;
+        bilanganSoalan =0;
 
         rekaSoalan();
 
+        //countdown
+        new CountDownTimer(10200,100){
+            public void onTick(long millisUntilFinished) {
+
+                progressBar.incrementProgressBy(1);
+            }
+
+            public void onFinish() {
+
+                fab.setVisibility(View.VISIBLE);
+                progressBar.setProgress(progressBar.getMax());
+                buttonTag1.setEnabled(false);
+                buttonTag2.setEnabled(false);
+                buttonTag3.setEnabled(false);
+                buttonTag4.setEnabled(false);
+            }
+        }.start();
     }
 
     private void rekaSoalan() {
@@ -101,41 +144,24 @@ public class MainActivity extends AppCompatActivity {
     public void menjawap(View v) {
         if (v.getTag().toString().equals(Integer.toString(tagBetul))) {
             skor++;
-            Toast.makeText(getApplicationContext(), "Betul", Toast.LENGTH_SHORT).show();
+
+           // Toast.makeText(getApplicationContext(), "Betul", Toast.LENGTH_SHORT).show();
+            textViewBetul.setText(Integer.toString(skor));
+            imageButtonBetul.animate().rotation(360f);
+            imageButtonBetul.getDrawable();
+
         } else {
-            Toast.makeText(getApplicationContext(),"tak", Toast.LENGTH_SHORT).show();
+
+          //  Toast.makeText(getApplicationContext(),"tak", Toast.LENGTH_SHORT).show();
+            textViewSalah.setText(Integer.toString(bilanganSoalan-skor));
+            imageButtonSalah.animate().rotation(360f);
         }
         bilanganSoalan++;
         rekaSoalan();
 
     }
 
-    public  void    mulaMain (View v) {
-        skor = 0;
-        bilanganSoalan =0;
-
-        rekaSoalan();
-
-        // progressbar
-
-        new CountDownTimer(10100, 1000) {
-            int count = 0;
-
-            @Override
-            public void onTick(long millisUntilFinished) {
-                progressBar.setProgress(count);
-                count++;
-                Log.i("Progress", " " + count);
-            }
-
-            @Override
-            public void onFinish() {
-                progressBar.setProgress(count);
-            }
-        }.start();
-    }
-
-    @Override
+       @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
