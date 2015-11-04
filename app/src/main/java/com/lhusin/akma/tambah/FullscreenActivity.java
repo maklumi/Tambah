@@ -1,19 +1,15 @@
 package com.lhusin.akma.tambah;
 
-import android.annotation.SuppressLint;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,13 +25,15 @@ public class FullscreenActivity extends AppCompatActivity {
     TextView textViewBetul;
     TextView textViewSalah;
     Button buttonTag1, buttonTag2, buttonTag3, buttonTag4;
+    TextView textView1, textView2, textView3, textView4;
     GridLayout gridLayoutPilihanJawapan;
     ArrayList<Integer> pilihanJawapan = new ArrayList<Integer>();
     int tagBetul;
     int skor = 0;
     int bilanganSoalan;
     int bilanganSalah = 0;
-    private ProgressBar progressBar;
+    int bilanganLife = 3;
+    private SeekBar seekBar;
     ImageButton imageButtonBetul, imageButtonSalah;
     FloatingActionButton fab;
     String heart="";
@@ -46,14 +44,27 @@ public class FullscreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fullscreen);
+            fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mulakanMain(fab);
+                    fab.setVisibility(View.INVISIBLE);
+                }
+            });
 
         textViewSoalan = (TextView)findViewById(R.id.textViewSoalan);
         buttonTag1 = (Button)findViewById(R.id.buttonTag1);
         buttonTag2 = (Button)findViewById(R.id.buttonTag2);
         buttonTag3 = (Button)findViewById(R.id.buttonTag3);
         buttonTag4 = (Button)findViewById(R.id.buttonTag4);
+            textView1 = (TextView)findViewById(R.id.textView1);
+            textView2 = (TextView)findViewById(R.id.textView2);
+            textView3 = (TextView)findViewById(R.id.textView3);
+            textView4 = (TextView)findViewById(R.id.textView4);
+
         gridLayoutPilihanJawapan = (GridLayout)findViewById(R.id.gridLayoutPilihanJawapan);
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        seekBar = (SeekBar)findViewById(R.id.seekBar);
         imageButtonBetul = (ImageButton)findViewById(R.id.imageButtonBetul);
         imageButtonSalah = (ImageButton)findViewById(R.id.imageButtonSalah);
         textViewBetul = (TextView)findViewById(R.id.textViewBetul);
@@ -64,11 +75,11 @@ public class FullscreenActivity extends AppCompatActivity {
 
     public void mulakanMain(View v) {
         fab.setVisibility(View.INVISIBLE);
-        progressBar.setProgress(0);
+        seekBar.setProgress(100);
         textViewSalah.setText("0");
         textViewBetul.setText("0");
         stateButton(true);
-        textViewSalah.setText(new String(new char[5]).replace("\0", heart));
+        textViewSalah.setText(new String(new char[bilanganLife]).replace("\0", heart));
         skor = 0;
         bilanganSoalan =0;
 
@@ -78,13 +89,13 @@ public class FullscreenActivity extends AppCompatActivity {
         new CountDownTimer(10200,100){
             public void onTick(long millisUntilFinished) {
 
-                progressBar.incrementProgressBy(1);
+                seekBar.incrementProgressBy(-1);
             }
 
             public void onFinish() {
 
                 fab.setVisibility(View.VISIBLE);
-                progressBar.setProgress(progressBar.getMax());
+                seekBar.setProgress(0);
                 stateButton(false);
             }
         }.start();
@@ -129,10 +140,14 @@ public class FullscreenActivity extends AppCompatActivity {
 
         }
 
-        buttonTag1.setText(Integer.toString(pilihanJawapan.get(0)));
+     /*   buttonTag1.setText(Integer.toString(pilihanJawapan.get(0)));
         buttonTag2.setText(Integer.toString(pilihanJawapan.get(1)));
         buttonTag3.setText(Integer.toString(pilihanJawapan.get(2)));
-        buttonTag4.setText(Integer.toString(pilihanJawapan.get(3)));
+        buttonTag4.setText(Integer.toString(pilihanJawapan.get(3)));*/
+        textView1.setText(Integer.toString(pilihanJawapan.get(0)));
+        textView2.setText(Integer.toString(pilihanJawapan.get(1)));
+        textView3.setText(Integer.toString(pilihanJawapan.get(2)));
+        textView4.setText(Integer.toString(pilihanJawapan.get(3)));
     }
 
     public void menjawap(View v) {
