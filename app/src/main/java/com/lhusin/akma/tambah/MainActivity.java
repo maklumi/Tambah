@@ -1,11 +1,8 @@
 package com.lhusin.akma.tambah;
 
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,7 +14,6 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -25,7 +21,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     TextView textViewSoalan;
-    TextView textViewBetul;
+    TextView textViewBetul, textViewLabelBetul;
     TextView textViewSalah;
     Button buttonTag1, buttonTag2, buttonTag3, buttonTag4;
     GridLayout gridLayoutPilihanJawapan;
@@ -38,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton imageButtonBetul, imageButtonSalah;
     FloatingActionButton fab;
     String heart="";
-
+    int lifeheart = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Mula!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Mula!", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
                 mulakanMain(fab);
             }
         });
@@ -65,10 +61,11 @@ public class MainActivity extends AppCompatActivity {
         buttonTag4 = (Button)findViewById(R.id.buttonTag4);
         gridLayoutPilihanJawapan = (GridLayout)findViewById(R.id.gridLayoutPilihanJawapan);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
-        imageButtonBetul = (ImageButton)findViewById(R.id.imageButtonBetul);
-        imageButtonSalah = (ImageButton)findViewById(R.id.imageButtonSalah);
+
+        textViewLabelBetul = (TextView)findViewById(R.id.textViewLabelBetul);
         textViewBetul = (TextView)findViewById(R.id.textViewBetul);
         textViewSalah = (TextView)findViewById(R.id.textViewSalah);
+        textViewSalah.setText(heart + heart + heart);
         heart = new String(new int[] {0x2764}, 0,1);
 
         Log.i("heart", heart);
@@ -80,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         textViewSalah.setText("0");
         textViewBetul.setText("0");
         stateButton(true);
-        textViewSalah.setText(new String(new char[5]).replace("\0", heart));
+        textViewSalah.setText(new String(new char[lifeheart]).replace("\0", heart));
         skor = 0;
         bilanganSoalan =0;
 
@@ -148,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void menjawap(View v) {
+
         if (v.getTag().toString().equals(Integer.toString(tagBetul))) {
             skor++;
 
@@ -160,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
           //  Toast.makeText(getApplicationContext(),"tak", Toast.LENGTH_SHORT).show();
            // textViewSalah.setText(Integer.toString(bilanganSoalan - skor));
             if ((bilanganSoalan - skor ) < 6 ) {
-                textViewSalah.setText(new String(new char[5-(bilanganSoalan-skor)]).replace("\0", heart));
+                textViewSalah.setText(new String(new char[lifeheart-(bilanganSoalan-skor)]).replace("\0", heart));
             } else {
                 //habis heart
                 stateButton(false);
