@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         stateButton(true);
         textViewSalah.setText(new String(new char[lifeheart]).replace("\0", heart));
         skor = 0;
-        bilanganSoalan =0;
+        bilanganSoalan =1;
 
         rekaSoalan();
 
