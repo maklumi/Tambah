@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     int skor = 0;
     int bilanganSoalan;
     int bilanganSalah = 0;
-    private ProgressBar progressBar;
+    ProgressBar progressBar;
     ImageButton imageButtonBetul, imageButtonSalah;
     FloatingActionButton fab;
     String heart="";
@@ -82,7 +82,9 @@ public class MainActivity extends AppCompatActivity {
         rekaSoalan();
 
         new CountDownTimer(10200,100){
+
             public void onTick(long millisUntilFinished) {
+
                 progressBar.incrementProgressBy(1);
             }
             public void onFinish() {
