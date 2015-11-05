@@ -3,6 +3,7 @@ package com.lhusin.akma.tambah;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -47,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Mula!", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                mulakanMain(fab);
+                Snackbar.make(view, "Mula!", Snackbar.LENGTH_SHORT).show();
+                        //.setAction("Action", null).show();
+                mulakanMain();
             }
         });
 
@@ -61,20 +62,17 @@ public class MainActivity extends AppCompatActivity {
         buttonTag4 = (Button)findViewById(R.id.buttonTag4);
         gridLayoutPilihanJawapan = (GridLayout)findViewById(R.id.gridLayoutPilihanJawapan);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
-
         textViewLabelBetul = (TextView)findViewById(R.id.textViewLabelBetul);
         textViewBetul = (TextView)findViewById(R.id.textViewBetul);
         textViewSalah = (TextView)findViewById(R.id.textViewSalah);
-        textViewSalah.setText(heart + heart + heart);
         heart = new String(new int[] {0x2764}, 0,1);
 
-        Log.i("heart", heart);
-    }
 
-    public void mulakanMain(View v) {
+           }
+
+    public void mulakanMain() {
         fab.setVisibility(View.INVISIBLE);
         progressBar.setProgress(0);
-        textViewSalah.setText("0");
         textViewBetul.setText("0");
         stateButton(true);
         textViewSalah.setText(new String(new char[lifeheart]).replace("\0", heart));
@@ -83,20 +81,20 @@ public class MainActivity extends AppCompatActivity {
 
         rekaSoalan();
 
-        //countdown
         new CountDownTimer(10200,100){
             public void onTick(long millisUntilFinished) {
-
                 progressBar.incrementProgressBy(1);
             }
-
             public void onFinish() {
-
-                fab.setVisibility(View.VISIBLE);
-                progressBar.setProgress(progressBar.getMax());
-                stateButton(false);
+                bilaTamat();
             }
         }.start();
+    }
+
+    public void bilaTamat() {
+        fab.setVisibility(View.VISIBLE);
+        progressBar.setProgress(progressBar.getMax());
+        stateButton(false);
     }
 
     private void stateButton(boolean enabled) {
@@ -126,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < bilTag; i++) {
             if (i == tagBetul) { //random placement of true answer
-
                 pilihanJawapan.add(jawapanBetul);
             }
 
@@ -148,24 +145,13 @@ public class MainActivity extends AppCompatActivity {
 
         if (v.getTag().toString().equals(Integer.toString(tagBetul))) {
             skor++;
-
-           // Toast.makeText(getApplicationContext(), "Betul", Toast.LENGTH_SHORT).show();
             textViewBetul.setText(Integer.toString(skor));
-
-
         } else {
-
-          //  Toast.makeText(getApplicationContext(),"tak", Toast.LENGTH_SHORT).show();
-           // textViewSalah.setText(Integer.toString(bilanganSoalan - skor));
-            if ((bilanganSoalan - skor ) < 6 ) {
+        if ((bilanganSoalan - skor ) < lifeheart +1 ) {
                 textViewSalah.setText(new String(new char[lifeheart-(bilanganSoalan-skor)]).replace("\0", heart));
             } else {
-                //habis heart
-                stateButton(false);
-                Log.i("salah", "" + (bilanganSoalan - skor));
-                textViewSalah.setText("Habis!");
+              bilaTamat();
             }
-
         }
         bilanganSoalan++;
         rekaSoalan();
@@ -198,5 +184,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.getItem(0).setEnabled(false);
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bilaTamat();
     }
 }
