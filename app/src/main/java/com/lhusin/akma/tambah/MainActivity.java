@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab;
     String heart="";
     int lifeheart = 3;
+    MyCountDownTimer meTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +50,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Mula!", Snackbar.LENGTH_SHORT).show();
-                        //.setAction("Action", null).show();
+
                 mulakanMain();
             }
         });
 
-
+    meTimer = new MyCountDownTimer();
         textViewSoalan = (TextView)findViewById(R.id.textViewSoalan);
         buttonTag1 = (Button)findViewById(R.id.buttonTag1);
         buttonTag2 = (Button)findViewById(R.id.buttonTag2);
@@ -81,22 +82,14 @@ public class MainActivity extends AppCompatActivity {
 
         rekaSoalan();
 
-        new CountDownTimer(10200,100){
-
-            public void onTick(long millisUntilFinished) {
-
-                progressBar.incrementProgressBy(1);
-            }
-            public void onFinish() {
-                bilaTamat();
-            }
-        }.start();
+        meTimer.start();
     }
 
     public void bilaTamat() {
         fab.setVisibility(View.VISIBLE);
         progressBar.setProgress(progressBar.getMax());
         stateButton(false);
+        meTimer.cancel();
     }
 
     private void stateButton(boolean enabled) {
@@ -192,5 +185,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         bilaTamat();
+    }
+
+    private class MyCountDownTimer extends CountDownTimer {
+
+        public MyCountDownTimer() {
+            super(10200, 100);
+        }
+
+        public void onTick(long millisUntilFinished) {
+
+            progressBar.incrementProgressBy(1);
+        }
+
+        public void onFinish() {
+            bilaTamat();
+        }
     }
 }
