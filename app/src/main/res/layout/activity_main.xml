@@ -26,4 +26,6 @@
         android:onClick="mulakanMain"
         android:scaleType="center" />
 
+
+
 </android.support.design.widget.CoordinatorLayout>
